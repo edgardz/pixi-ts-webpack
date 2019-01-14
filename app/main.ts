@@ -16,5 +16,6 @@ new class Main {
     // test
     const test: Test = new Test();
     this.app.stage.addChild(test);
+    console.log('verify source map.');
   }
 }();

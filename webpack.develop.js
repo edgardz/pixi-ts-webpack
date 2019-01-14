@@ -3,14 +3,10 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  devtool: 'inline-source-map',
+  devtool: 'cheap-source-map',
 
   entry: {
-    app: [
-      'webpack-dev-server/client?http://0.0.0.0:3000',
-      'webpack/hot/only-dev-server',
-      path.resolve(__dirname, 'app/main.ts')
-    ]
+    app: ['webpack-dev-server/client?http://0.0.0.0:3000', path.resolve(__dirname, 'app/main.ts')]
   },
 
   output: {
@@ -61,10 +57,6 @@ module.exports = {
   },
 
   plugins: [
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor'
-    }),
-
     new HtmlWebpackPlugin({
       template: 'app/index.html',
       chunks: ['vendor', 'app'],
@@ -81,6 +73,18 @@ module.exports = {
       }
     })
   ],
+
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        commons: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendor',
+          chunks: 'all'
+        }
+      }
+    }
+  },
 
   node: {
     fs: 'empty',

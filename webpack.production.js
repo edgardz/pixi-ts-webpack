@@ -3,8 +3,6 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  devtool: 'inline-source-map',
-
   entry: {
     app: [path.resolve(__dirname, 'app/main.ts')]
   },
@@ -48,24 +46,24 @@ module.exports = {
   },
 
   plugins: [
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor'
-    }),
-
     new HtmlWebpackPlugin({
       template: 'app/index.html',
       chunks: ['vendor', 'app'],
       chunksSortMode: 'manual'
-    }),
-
-    new webpack.optimize.UglifyJsPlugin({
-      sourceMap: false,
-      comments: false,
-      compress: {
-        warnings: false
-      }
     })
   ],
+
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        commons: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendor',
+          chunks: 'all'
+        }
+      }
+    }
+  },
 
   node: {
     fs: 'empty',
